@@ -4,7 +4,9 @@
 
 ## 使用
 
-可直接下载本仓库提供的可执行文件，置于项目的根目录下，运行该文件，可看到项目下生成的文件，新旧版本对比如下：
+可直接下载本仓库提供的可执行文件：https://github.com/fireboomio/fb-migration/releases/tag/0.0.1
+
+置于项目的根目录下，运行该文件，可看到项目下生成的文件，新旧版本对比如下：
 
 - `store` 目录已迁移至 `store-cloud`目录【目录结构也有所调整】
 
@@ -64,7 +66,36 @@ store-cloud
 
 本次更新对钩子模板也进行了更新，适配了新版的飞布，如果在项目中使用了钩子模板，比如`Golang-server`或者`node-server`，在升级模板后需要做一点手动的适配，大部分代码我们都是兼容的，只有几处小的地方需要开发者手动处理，以`Golang-server`为例：
 
-### 1. cutomize目录下创建的自定义数据源
+### 1. 修改模板分支来升级为新的模板
+
+手动在控制台升级钩子模板，新版模板的内容会输出到`template-cloud`目录下，模板的配置项可以在`store-cloud/sdk`目录下查看，以`golang-server`为例，它的配置文件如下：
+
+```json
+{
+	"name": "golang-server",
+	"enabled": true,
+	"type": "server",
+	"language": "go",
+	"extension": ".go",
+	"gitUrl": "https://code.100ai.com.cn/fireboomio/sdk-template_go-server.git",
+	"gitBranch": "test",
+	"outputPath": "./custom-go",
+	"createTime": "2023-08-21T18:51:18+08:00",
+	"updateTime": "2023-08-21T18:51:28+08:00",
+	"deleteTime": "",
+	"icon": "...",
+	"title": "Golang server",
+	"author": "fireboom",
+	"version": "latest",
+	"description": "Golang hook server SDK template for fireboom"
+}
+```
+
+新版增加了`gitBranch`选项，可以从新版的分支拉取最新的模板，目前新版在`test`分支
+
+
+
+### 2. cutomize目录下创建的自定义数据源
 
 示例旧版代码：
 
@@ -111,23 +142,85 @@ import (
 )
 ```
 
-### 2. proxys目录下注册的自定义路由函数
+### 3. proxys目录下注册的自定义路由函数
 
-### 3. function目录下注册的函数
+- `proxys` **目录名称变更为** `proxy`，避免歧义。同时可以传入**RBAC权限认证的配置项**
 
+  示例代码：
 
+  ```go
+  package proxy
+  
+  import (
+  	"custom-go/pkg/base"
+  	"custom-go/pkg/plugins"
+  	"custom-go/pkg/wgpb"
+  	"net/http"
+  )
+  
+  func init() {
+  	plugins.RegisterProxyHook(ping, conf)
+  }
+  
+  var conf = &plugins.HookConfig{
+  	AuthRequired: true,
+  	AuthorizationConfig: &wgpb.OperationAuthorizationConfig{
+  		RoleConfig: &wgpb.OperationRoleConfig{
+  			RequireMatchAny: []string{"admin", "user"},
+  		},
+  	},
+  	EnableLiveQuery: false,
+  }
+  
+  func ping(hook *base.HttpTransportHookRequest, body *plugins.HttpTransportBody) (*base.ClientResponse, error) {
+  	// do something here ...
+  	body.Response = &base.ClientResponse{
+  		StatusCode: http.StatusOK,
+  	}
+  	body.Response.OriginBody = []byte("ok")
+  	return body.Response, nil
+  }
+  ```
 
+- ⚠️要在`main.go`中引入
 
-
-
-
-
-
-
-
-
-
-
+  ```go
+  import (
+  	_ "custom-go/proxy"
+  	"custom-go/server"
+  )
+  ```
 
 注：如果迁移成功，旧的文件可以选择删除，包括`store`、`exported`和`upload`目录下的文件
 
+## Rest数据源适配
+
+新版`Rest`数据源支持`swagger3`的格式，旧版数据源是`swagger2`格式的，需要做适配性改造，才能使飞布内省出数据源的超图。
+
+此处改造是针对之前使用过Rest数据源并上传过`swagger2`格式的json文件。如果没有更好的方式来升级成swagger3格式的文件，可以参考以下示例
+
+```shell
+## 安装npm包
+npm install -g swagger2openapi
+## 转换json文件
+swagger2openapi swagger2.json -o swagger3.json
+```
+
+💡很重要的一点：**为每个api加上 `operationId`**，新版的飞布根据这个自定义的属性来生成超图，可以自定义一个相对简短的名称
+
+```json
+"/api/login": {
+      "post": {
+        "operationId": "login"
+        ......
+      }
+}
+```
+
+## 目录名称变更
+
+- `auth`目录变更为`authentication`
+
+- `proxys`目录变更为`proxy`
+
+  
