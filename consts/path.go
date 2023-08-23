@@ -25,6 +25,7 @@ const (
 )
 
 const (
+	BackendPath    = "old"
 	StorePath      = "store"                      // 各种配置文件
 	StoreCloudPath = "store-cloud"                // 各种配置文件
 	StoreListPath  = StorePath + PathSep + "list" // json db里面存储的内容
@@ -75,4 +76,15 @@ const (
 
 	UploadGraphqlPath      = UploadPath + PathSep + "graphql"
 	UploadCloudGraphqlPath = UploadCloudPath + PathSep + "graphql"
+)
+
+const (
+	Auth           = "auth"
+	Authentication = "authentication"
+
+	Proxys = "proxys"
+	Proxy  = "proxy"
+
+	Hooks     = "hooks"
+	Operation = "operation"
 )

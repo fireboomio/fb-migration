@@ -3,11 +3,13 @@ package utils
 import (
 	"bufio"
 	"encoding/json"
+	"fireboom-migrate/consts"
 	"fireboom-migrate/types/origin"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func ReadFile(path string) (content []byte, err error) {
@@ -136,4 +138,76 @@ func GetHookConfigEnable(path string) bool {
 		return false
 	}
 	return *hook.Enabled
+}
+
+func DelDir(src string) {
+	os.RemoveAll(src)
+}
+
+func CutDir(src string, dst string) {
+	CopyDir(src, dst)
+	DelDir(src)
+}
+
+func MoveDir() {
+
+	// 移动store目录到old目录
+	CutDir(consts.StorePath, filepath.Join(consts.BackendPath, consts.StorePath))
+
+	// 移动upload目录到old目录
+	CutDir(consts.UploadPath, filepath.Join(consts.BackendPath, consts.UploadPath))
+
+	// 移动exported目录到old目录
+	CutDir(consts.ExportedPath, filepath.Join(consts.BackendPath, consts.ExportedPath))
+
+	os.Rename(consts.StoreCloudPath, consts.StorePath)
+	os.Rename(consts.UploadCloudPath, consts.UploadPath)
+
+}
+
+func RollBack() {
+
+	DelDir(consts.StorePath)
+	DelDir(consts.UploadPath)
+
+	CutDir(filepath.Join(consts.BackendPath, consts.StorePath), consts.StorePath)
+
+	CutDir(filepath.Join(consts.BackendPath, consts.UploadPath), consts.UploadPath)
+
+	CutDir(filepath.Join(consts.BackendPath, consts.ExportedPath), consts.ExportedPath)
+
+	os.Remove(".env")
+	CopyFile(consts.BackendPath+consts.PathSep+".env", ".env")
+
+	DelDir(consts.BackendPath)
+}
+
+func RenameCustom() {
+	fmt.Println("输入需要修改的目录名称(如果无需修改，直接回车;修改，回车换行，再次回车结束输入):")
+	reader := bufio.NewReader(os.Stdin)
+	var dirs []string
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			panic(err)
+		}
+		if len(strings.TrimSpace(line)) == 0 {
+			break
+		}
+		dirs = append(dirs, line)
+	}
+
+	for _, dir := range dirs {
+		dir = strings.Trim(dir, "\n")
+		_, err := os.Stat(dir)
+		if os.IsNotExist(err) {
+			fmt.Println(dir + " is not exist")
+		}
+		if err == nil {
+			os.Rename(dir+consts.PathSep+consts.Auth, dir+consts.PathSep+consts.Authentication)
+			os.Rename(dir+consts.PathSep+consts.Proxys, dir+consts.PathSep+consts.Proxy)
+			os.Rename(dir+consts.PathSep+consts.Hooks, dir+consts.PathSep+consts.Operation)
+			fmt.Println("renaming " + dir)
+		}
+	}
 }
