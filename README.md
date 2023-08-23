@@ -220,7 +220,5 @@ swagger2openapi swagger2.json -o swagger3.json
 ## 目录名称变更
 
 - `auth`目录变更为`authentication`
-
 - `proxys`目录变更为`proxy`
-
-  
+- API钩子目录名称变更：`hooks/A/postResolve.go`---->`operation/A/postResovle.go`
