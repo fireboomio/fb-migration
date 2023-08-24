@@ -183,31 +183,28 @@ func RollBack() {
 }
 
 func RenameCustom() {
-	fmt.Println("输入需要修改的目录名称(如果无需修改，直接回车;修改，回车换行，再次回车结束输入):")
+	fmt.Println("输入需要修改的钩子模板目录名称(例如：custom-go,若无需修改直接回车):")
+	fmt.Println("查看本次修改内容：https://github.com/fireboomio/fb-migration")
 	reader := bufio.NewReader(os.Stdin)
-	var dirs []string
-	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			panic(err)
-		}
-		if len(strings.TrimSpace(line)) == 0 {
-			break
-		}
-		dirs = append(dirs, line)
+	var dir string
+	line, err := reader.ReadString('\n')
+	if err != nil {
+		panic(err)
 	}
+	dir = line
 
-	for _, dir := range dirs {
-		dir = strings.Trim(dir, "\n")
-		_, err := os.Stat(dir)
-		if os.IsNotExist(err) {
-			fmt.Println(dir + " is not exist")
-		}
-		if err == nil {
-			os.Rename(dir+consts.PathSep+consts.Auth, dir+consts.PathSep+consts.Authentication)
-			os.Rename(dir+consts.PathSep+consts.Proxys, dir+consts.PathSep+consts.Proxy)
-			os.Rename(dir+consts.PathSep+consts.Hooks, dir+consts.PathSep+consts.Operation)
-			fmt.Println("renaming " + dir)
-		}
+	dir = strings.Trim(dir, "\n")
+	if dir == "" {
+		return
+	}
+	_, err = os.Stat(dir)
+	if os.IsNotExist(err) {
+		fmt.Println(dir + " is not exist")
+	}
+	if err == nil {
+		os.Rename(dir+consts.PathSep+consts.Auth, dir+consts.PathSep+consts.Authentication)
+		os.Rename(dir+consts.PathSep+consts.Proxys, dir+consts.PathSep+consts.Proxy)
+		os.Rename(dir+consts.PathSep+consts.Hooks, dir+consts.PathSep+consts.Operation)
+		fmt.Println("renaming sub menus " + dir)
 	}
 }
