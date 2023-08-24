@@ -184,7 +184,6 @@ func RollBack() {
 
 func RenameCustom() {
 	fmt.Println("输入需要修改的钩子模板目录名称(例如：custom-go,若无需修改直接回车):")
-	fmt.Println("查看本次修改内容：https://github.com/fireboomio/fb-migration")
 	reader := bufio.NewReader(os.Stdin)
 	var dir string
 	line, err := reader.ReadString('\n')
@@ -207,4 +206,5 @@ func RenameCustom() {
 		os.Rename(dir+consts.PathSep+consts.Hooks, dir+consts.PathSep+consts.Operation)
 		fmt.Println("renaming sub menus " + dir)
 	}
+	fmt.Println("查看本次修改内容：https://github.com/fireboomio/fb-migration")
 }
