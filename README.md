@@ -6,61 +6,80 @@
 
 可直接下载本仓库提供的可执行文件：https://github.com/fireboomio/fb-migration/releases/tag/0.0.1
 
-置于项目的根目录下，运行该文件，可看到项目下生成的文件，新旧版本对比如下：
+置于项目的根目录下，运行该文件，可看到项目下生成的文件，旧版的文件放置于`old`目录下，如有需要可对照查看
 
-- `store` 目录已迁移至 `store-cloud`目录【目录结构也有所调整】
+回滚命令：`./fb-migration-amd64 -rollback` 如果因为某些意外迁移失败，可以恢复成旧版
 
-```
-store
-├── hooks
-│   ├── auth
-│   ├── customize
-│   ├── global
-│   ├── hooks
-│   └── uploads
-├── list
-│   ├── FbAuthentication
-│   ├── FbDataSource
-│   ├── FbOperation
-│   ├── FbRole
-│   ├── FbSDK
-│   └── FbStorageBucket
-└── object
-    ├── global_config.json
-    ├── global_operation_config.json
-    ├── global_system_config.json
-    └── operations
-```
+新旧版本对比如下：
 
-```
-store-cloud
-├── config
-│   ├── global.operation.json
-│   └── global.setting.json
-├── datasource
-│   ├── main.json
-│   ├── system.json
-├── operation
-│   ├── xxx.graphql
-│   ├── xxx.json
-├── role
-│   ├── admin.json
-│   └── user.json
-├── sdk
-│   └── golang-server.json
-└── storage
-    └── aliyun.json
-```
+- 旧版`store` 目录
+
+  ```
+  store
+  ├── hooks
+  │   ├── auth
+  │   ├── customize
+  │   ├── global
+  │   ├── hooks
+  │   └── uploads
+  ├── list
+  │   ├── FbAuthentication
+  │   ├── FbDataSource
+  │   ├── FbOperation
+  │   ├── FbRole
+  │   ├── FbSDK
+  │   └── FbStorageBucket
+  └── object
+      ├── global_config.json
+      ├── global_operation_config.json
+      ├── global_system_config.json
+      └── operations
+  ```
+
+- 新版`store`目录
+
+  ```
+  store
+  ├── config
+  │   ├── global.operation.json
+  │   └── global.setting.json
+  ├── datasource
+  │   ├── main.json
+  │   ├── system.json
+  ├── operation
+  │   ├── xxx.graphql
+  │   ├── xxx.json
+  ├── role
+  │   ├── admin.json
+  │   └── user.json
+  ├── sdk
+  │   └── golang-server.json
+  └── storage
+      └── aliyun.json
+  ```
+
+- 新版`upload`目录
+
+  ```
+  upload
+  ├── graphql
+  ├── oas
+  │   └── casdoor.json
+  └── sqlite
+  ```
+  
+
+
 
 🎉重大更新🎉：
 
-🌟`store/list/`目录下的配置文件不再以伪json格式存储，全部拆分迁移至`store-cloud`目录下了
+🌟`store/list/`目录下的配置文件不再以伪json格式存储，全部拆分迁移至新版`store`目录下了
 
-🌟`store/object`目录下的全局配置文件和系统配置文件在新版已合并成`store-cloud/global.setting.json`和`global.operation.json`
+🌟`store/object`目录下的全局配置文件和系统配置文件在新版已合并成`store/global.setting.json`和`global.operation.json`
 
-🌟`graphql`文件和`operation`的配置文件不再分家， 全部存放至`store-cloud/operation`目录下
+🌟`graphql`文件和`operation`的配置文件不再分家， 全部存放至`store/operation`目录下
 
-🌟`upload`目录下的文件已迁移至`upload-cloud`目录
+🌟`upload`目录下的db文件夹更名为`sqlite`
 
 ## 钩子模板的更新
 
@@ -78,7 +97,7 @@ store-cloud
 	"language": "go",
 	"extension": ".go",
 	"gitUrl": "https://code.100ai.com.cn/fireboomio/sdk-template_go-server.git",
-	"gitBranch": "test",
+	"gitBranch": "V2.0",
 	"outputPath": "./custom-go",
 	"createTime": "2023-08-21T18:51:18+08:00",
 	"updateTime": "2023-08-21T18:51:28+08:00",
@@ -91,7 +110,7 @@ store-cloud
 }
 ```
 
-新版增加了`gitBranch`选项，可以从新版的分支拉取最新的模板，目前新版在`test`分支
+新版增加了`gitBranch`选项，可以从新版的分支拉取最新的模板，目前新版在`V2.0`分支
 
 
 
