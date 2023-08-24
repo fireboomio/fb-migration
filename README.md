@@ -239,3 +239,10 @@ swagger2openapi swagger2.json -o swagger3.json
 - `auth`目录变更为`authentication`
 - `proxys`目录变更为`proxy`
 - API钩子目录名称变更：`hooks/A/postResolve.go`---->`operation/A/postResovle.go`
+
+当运行迁移程序时，会要求`输入需要修改的目录名称(例如：custom-go 回车换行可输入多个，两次回车结束输入；若无需修改，直接回车)`
+
+其实就是将钩子的目录名称进行了变更，无需再手动操作，假如你不需要变更模板（如custom-go/custom-ts），直接回车即可
+
+如果需要变更，可以输出钩子模板的路径，并且可以输出多个，**注意这里仅仅是针对服务端模板，不是客户端模板**
+
