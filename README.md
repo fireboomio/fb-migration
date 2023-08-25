@@ -10,9 +10,9 @@
 
 ## 注意事项
 
-⚠️不要多次执行迁移程序，因为这涉及到文件目录的操作，如果你想恢复到以前的版本，可以执行回滚命令
+⚠️**不要多次执行迁移程序**，因为这涉及到文件目录的操作，如果你想恢复到以前的版本，可以执行回滚命令
 
-回滚命令：`./fb-migration-amd64 -rollback` 如果因为某些意外迁移失败，可以恢复成旧版
+**回滚命令**：`./fb-migration-amd64 -rollback` 如果因为某些意外迁移失败，可以恢复成旧版
 
 新旧版本对比如下：
 
@@ -255,13 +255,13 @@ swagger2openapi swagger2.json -o swagger3.json
 ## 其他升级内容
 
 1. 新增fromClaim参数customConfig，入参jsonPathComponents，填写参数路径，从user的customClaims中获取参数，类型，必填，名称根据schema自动解析
-2. 新增@transaction参数，允许mutation执行事务，要求同一个数据源且为数据库类型
+2. **新增@transaction参数，允许mutation执行事务**，要求同一个数据源且为数据库类型
 3. 新增编译orderby，or数组类型参数判断，若参数为object且子参数数量大于1时提示非法
 4. 底层存储升级，目录结构更加清晰，优化底层逻辑，采用单个json文件存储各个模块配置
 5. 优化编译生成的启动配置，复用缓存配置，减少graphql编译次数，大幅缩小配置文件大小和编译时间
 6. 钩子customize，proxy、function由生成-启动-编译方式改为由钩子服务通过health上报，自动更新对应的存储
-7. 模版下载提供指定分支和commitHash方式，重新部署后自动下载对应commitHash版本的模板
+7. **模版下载提供指定分支和commitHash方式，**重新部署后自动下载对应commitHash版本的模板
 8. 新增prisma数据源，上传prisma文件来实现数据源的查询操作
 9. 新增导入导出功能，各个模块可以根据名称筛选导出压缩包，并导入到其他项目，包括api，数据源，s3，sdk，role等
 10. 飞布web控制台对应的swagger升级，采用通用路由配合占位符，范型动态解析真实路由
-11. 生成`graphql api`时`Decimal` `bytes`去掉前缀，json变全大写
+11. **生成`graphql api`时`Decimal` `bytes`去掉前缀，json变全大写**
