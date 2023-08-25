@@ -43,7 +43,7 @@ func migrateSdk() {
 			Language:    sdk.Language,
 			Extension:   langExtMap[sdk.Language],
 			GitUrl:      sdk.Url,
-			GitBranch:   "main",
+			GitBranch:   "V2.0",
 			OutputPath:  sdk.OutputPath,
 			CreateTime:  sdk.CreateTime,
 			UpdateTime:  sdk.UpdateTime,
