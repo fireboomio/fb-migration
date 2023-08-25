@@ -258,8 +258,8 @@ swagger2openapi swagger2.json -o swagger3.json
 2. **新增@transaction参数，允许mutation执行事务**，要求同一个数据源且为数据库类型
 3. 新增编译orderby，or数组类型参数判断，若参数为object且子参数数量大于1时提示非法
 4. 底层存储升级，目录结构更加清晰，优化底层逻辑，采用单个json文件存储各个模块配置
-5. 优化编译生成的启动配置，复用缓存配置，减少graphql编译次数，大幅缩小配置文件大小和编译时间
-6. 钩子customize，proxy、function由生成-启动-编译方式改为由钩子服务通过health上报，自动更新对应的存储
+5. 优化编译生成的启动配置，复用缓存配置，减少graphql编译次数，**大幅缩小配置文件大小和编译时间**
+6. **钩子customize，proxy、function**由生成-启动-编译方式改为由钩子服务通过health上报，自动更新对应的存储
 7. **模版下载提供指定分支和commitHash方式，**重新部署后自动下载对应commitHash版本的模板
 8. 新增prisma数据源，上传prisma文件来实现数据源的查询操作
 9. 新增导入导出功能，各个模块可以根据名称筛选导出压缩包，并导入到其他项目，包括api，数据源，s3，sdk，role等
